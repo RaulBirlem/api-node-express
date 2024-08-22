@@ -38,6 +38,7 @@ router.post('/login', async (req,res)=>{
 
     try {
         const userInfo = req.body
+//busca usuário no db
         const user = await prisma.user.findUnique({
             where:{email:userInfo.email
             },})
@@ -45,6 +46,15 @@ router.post('/login', async (req,res)=>{
             if(!user){
                 return res.status(404).json({message:"Usuário não encontrado."})
             }
+
+//decrypt password
+            const isMatch = await bcrypt.compare(userInfo.password, user.password)
+//compara a senha do db com a do usuário
+            if(!isMatch){
+                return res.status(400).json({message: "Senha inválida."})
+            }
+
+
             res.status(200).json(user)
     } catch (error) {
         res.status(500).json({message:"Erro de servidor, tente novamente."})
