@@ -1,11 +1,14 @@
 import express from "express"
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
-
+import jwt from "jsonwebtoken"
 
 
 const prisma = new PrismaClient()
 const router = express.Router()
+
+const JWT_SECRET = process.env.JWT_SECRET
+
 
 // cadastro
 
@@ -53,9 +56,11 @@ router.post('/login', async (req,res)=>{
             if(!isMatch){
                 return res.status(400).json({message: "Senha inválida."})
             }
+// gerar token JWT
 
+            const token = jwt.sign({id:user.id}, JWT_SECRET, {expiresIn: '30d'})
 
-            res.status(200).json(user)
+            res.status(200).json(token)
     } catch (error) {
         res.status(500).json({message:"Erro de servidor, tente novamente."})
 
