@@ -1,6 +1,9 @@
 import express from 'express'
 import publicRoutes from './routes/public.js'
 import privateRoutes from './routes/private.js'
+
+import auth from './middleware/auth.js'
+
 const app = express()
 
 app.use(express.json())
@@ -11,6 +14,6 @@ app.use(express.json())
 // pública ->cadastrar e login, privado ->listar
 
 app.use('/',publicRoutes)
-app.use("/", privateRoutes)
+app.use("/",auth, privateRoutes)
 
 app.listen(3000, () => console.log("server running"))

@@ -11,6 +11,7 @@ router.get('/listar-usuarios', async (req,res)=> {
 
         res.status(200).json({message: "Usuários listados com sucesso:",users})
     } catch (error) {
+        console.log(error)
         res.status(500).json({message:"Falha no servidor."})
     }
 })
